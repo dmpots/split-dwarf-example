@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# Debug info
+*.dwo
+*.dwp
+
+# Build log
+.ninja_log

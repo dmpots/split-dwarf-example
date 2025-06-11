@@ -1,0 +1,28 @@
+ninja_required_version = 1.3
+cxx = clang++
+cxxflags = -gsplit-dwarf -g
+
+rule compile
+  command = $cxx $cxxflags -c $in -o $out
+  description = Compiling $in
+
+rule link
+  command = $cxx $in -o $out
+  description = Linking $out
+
+rule dwp
+  command = llvm-dwp -o $out $in
+  description = Generating DWP file $out
+
+rule clean
+  command = rm -f *.o *.dwo a.out a.dwp
+  description = Cleaning up
+
+build foo.o  | foo.dwo : compile foo.cc
+build main.o | main.dwo: compile main.cc
+build a.out: link main.o foo.o
+build a.dwp: dwp foo.dwo main.dwo
+
+build clean: clean
+
+default a.out
